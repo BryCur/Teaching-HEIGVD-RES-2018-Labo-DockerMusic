@@ -6,7 +6,7 @@
 * It is up to you if you want to fork this repo, or if you prefer to work in a private repo. However, you have to use exactly the same directory structure for the validation procedure to work. 
 * ** There will be no grade for this lab. However, if you work on it seriously, the next challenge will be very easy (just be careful: the challenge will be done on a short period, so don't be late!)**
 * We expect that you will have more issues and questions than with other labs (because we have a left some questions open on purpose). Please ask your questions on telegram or in the forum, so that everyone in the class can benefit from the discussion.
- 
+
 ## Objectives
 
 This lab has 4 objectives:
@@ -105,79 +105,103 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic |
 | --- | --- |
 |Question | How can we represent the system in an **architecture diagram**, which gives information both about the Docker containers, the communication protocols and the commands? |
-| | *Insert your diagram here...* |
+|  | The Musician "plays" the sound of his instrument (broadcast). Then the auditor manage an active musician list and provide it to every new connection. It also recieve the musician "sound" |
 |Question | Who is going to **send UDP datagrams** and **when**? |
-| | *Enter your response here...* |
+| | The musician, every second |
 |Question | Who is going to **listen for UDP datagrams** and what should happen when a datagram is received? |
-| | *Enter your response here...* |
+| | the auditor, he's got to update the information in the list |
 |Question | What **payload** should we put in the UDP datagrams? |
-| | *Enter your response here...* |
+| | the musician ID, the sound of the instrument |
 |Question | What **data structures** do we need in the UDP sender and receiver? When will we update these data structures? When will we query these data structures? |
 | | *Enter your response here...* |
 
 
 ## Task 2: implement a "musician" Node.js application
 
-| #  | Topic
-| ---  | ---
-|Question | In a JavaScript program, if we have an object, how can we **serialize it in JSON**?
-| | *Enter your response here...*
-|Question | What is **npm**?
-| | *Enter your response here...*
-|Question | What is the `npm install` command and what is the purpose of the `--save` flag?
-| | *Enter your response here...*
-|Question | How can we use the `https://www.npmjs.com/` web site?
-| | *Enter your response here...*
-|Question | In JavaScript, how can we **generate a UUID** compliant with RFC4122?
-| | *Enter your response here...*
-|Question | In Node.js, how can we execute a function on a **periodic** basis?
-| | *Enter your response here...*
-|Question | In Node.js, how can we **emit UDP datagrams**?
-| | *Enter your response here...*
-|Question | In Node.js, how can we **access the command line arguments**?
-| | *Enter your response here...*
+Question In a JavaScript program, if we have an object, how can we **serialize it in JSON**?
+` JSON.stringify(_objet json_)`
+**Question** : What is **npm**?
+  the package manager of Javascript
+**Question** : What is the `npm install` command and what is the purpose of the `--save` flag?
+  `npm install` will install a package, while the `--save` flag will add it to the dependency
+**Question** : How can we use the `https://www.npmjs.com/` web site?
+ to look for useful package, or documentation
+**Question** : In JavaScript, how can we **generate a UUID** compliant with RFC4122?
+  use the GUID import
+**Question** :: In Node.js, how can we execute a function on a **periodic** basis?
+setInterval(_function_, _delay_);
+
+**Question** :: In Node.js, how can we **emit UDP datagrams**?
+
+```javascript
+var dgram = require('dgram');
+var server = dgram.createSocket('udp4');
+server.send(payload, 0, payload.length, PORT, DEST,
+            function (err, byte) {
+    console.log("message sent");
+});
+```
+
+**Question** : In Node.js, how can we **access the command line arguments**?
+`system.argv[pos]` le premier paramètre est la commande "node", et le second le nom du fichier exécuté
 
 
 ## Task 3: package the "musician" app in a Docker image
 
-| #  | Topic
-| ---  | ---
-|Question | How do we **define and build our own Docker image**?
-| | *Enter your response here...*
-|Question | How can we use the `ENTRYPOINT` statement in our Dockerfile?
-| | *Enter your response here...*
-|Question | After building our Docker image, how do we use it to **run containers**?
-| | *Enter your response here...*
-|Question | How do we get the list of all **running containers**?
-| | *Enter your response here...*
-|Question | How do we **stop/kill** one running container?
-| | *Enter your response here...*
-|Question | How can we check that our running containers are effectively sending UDP datagrams?
-| | *Enter your response here...*
+**Question** : How do we **define and build our own Docker image**?
+  *Enter your response here...*
+**Question** : How can we use the `ENTRYPOINT` statement in our Dockerfile?
+  *Enter your response here...*
+**Question** : After building our Docker image, how do we use it to **run containers**?
+  *Enter your response here...*
+**Question** : How do we get the list of all **running containers**?
+  *Enter your response here...*
+**Question** : How do we **stop/kill** one running container?
+  *Enter your response here...*
+**Question** : How can we check that our running containers are effectively sending UDP datagrams?
+  *Enter your response here...*
 
 
 ## Task 4: implement an "auditor" Node.js application
 
-| #  | Topic
-| ---  | ---
-|Question | With Node.js, how can we listen for UDP datagrams in a multicast group?
-| | *Enter your response here...*
-|Question | How can we use the `Map` built-in object introduced in ECMAScript 6 to implement a **dictionary**? 
-| | *Enter your response here...*
-|Question | How can we use the `Moment.js` npm module to help us with **date manipulations** and formatting? 
-| | *Enter your response here...*
-|Question | When and how do we **get rid of inactive players**? 
-| | *Enter your response here...*
-|Question | How do I implement a **simple TCP server** in Node.js? 
-| | *Enter your response here...*
+**Question** : With Node.js, how can we listen for UDP datagrams in a multicast group?
+
+```javascript
+var dgram = require('dgram');
+udp_server = dgram.createSocket('udp4');
+
+// event à la réception d'un message
+udp_server.on("message", function (msg, rinfo) {
+    console.log(msg.toString())
+});
+udp_server.bind(PORT, ADRESS);
+```
+
+**Question** : How can we use the `Map` built-in object introduced in ECMAScript 6 to implement a **dictionary**? 
+  *Enter your response here...*
+**Question** : How can we use the `Moment.js` npm module to help us with **date manipulations** and formatting? 
+  *Enter your response here...*
+**Question** : When and how do we **get rid of inactive players**? 
+  *Enter your response here...*
+**Question** : How do I implement a **simple TCP server** in Node.js? 
+
+```javascript
+const net = require('net');
+tcp_server = net.createServer(onClientConnected);
+tcp_server.listen(PORT_TCP, HOST);
+
+function onClientConnected(socket) {
+    // TODO ENVOYER LE DICO SERIALISÉ
+    socket.write("GG EZ");
+    socket.destroy();
+}
+```
 
 
 ## Task 5: package the "auditor" app in a Docker image
 
-| #  | Topic
-| ---  | ---
-|Question | How do we validate that the whole system works, once we have built our Docker image?
-| | *Enter your response here...*
+**Question** : How do we validate that the whole system works, once we have built our Docker image?
+  *Enter your response here...*
 
 
 ## Constraints
