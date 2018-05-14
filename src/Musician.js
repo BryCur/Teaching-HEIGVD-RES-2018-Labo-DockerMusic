@@ -10,10 +10,10 @@ function Instrument(name, sound) {
     this.sound = sound;
 }
 
+
 var instrument ;
 
-switch (process.argv[3]){
-    default:
+switch (process.argv[3].toString()){
     case "piano"  :
         instrument = new Instrument("piano", "ti-ta-ti");
         break;
@@ -36,7 +36,7 @@ function send(payload) {
     var server = dgram.createSocket('udp4');
     server.send(payload, 0, payload.length, PORT, HOST,
         function (err, byte) {
-            console.log("message sent to " + HOST + ":" + PORT);
+            console.log("message sent to " + HOST + ":" + PORT + " : " + instrument.sound);
         });
 
 }

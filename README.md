@@ -178,11 +178,13 @@ udp_server.bind(PORT, ADRESS);
 ```
 
 **Question** : How can we use the `Map` built-in object introduced in ECMAScript 6 to implement a **dictionary**? 
-  *Enter your response here...*
+`var maMap = new Map();`
 **Question** : How can we use the `Moment.js` npm module to help us with **date manipulations** and formatting? 
-  *Enter your response here...*
-**Question** : When and how do we **get rid of inactive players**? 
-  *Enter your response here...*
+`npm install moment --save` 
+**Question** : When and how do we **get rid of inactive players**?
+
+`maMap.remove(key)`
+
 **Question** : How do I implement a **simple TCP server** in Node.js? 
 
 ```javascript
