@@ -3,7 +3,7 @@ var PORT_UDP = 58318;
 var dgram = require('dgram');
 var moment = require('moment');
 
-udp_server = dgram.createSocket('udp4');
+var udp_server = dgram.createSocket('udp4');
 
 
 function Musicien(uuid, instrument, lastContact){
@@ -14,33 +14,23 @@ function Musicien(uuid, instrument, lastContact){
 
 var mapMusicien = new Map();
 
+var mapInstrument = new Map();
 
+mapInstrument.set("ti-ta-ti", "piano");
+mapInstrument.set("trulu", "flute");
+mapInstrument.set("pouet", "trumpet");
+mapInstrument.set("gzi-gzi", "violin");
+mapInstrument.set("boum-boum", "drum");
 
 // event à la réception d'un message
 udp_server.on("message", function (msg, rinfo) {
     var payload = JSON.parse(msg.toString());
     var sonRecu = payload.noise;
     var uuid = payload.id;
-    var reception = moment().format('MMMM D YYYY, HH:mm:ss');
-    var instrument;
+    var reception = moment().format('YYYY-MM-DD HH:mm:ss');
+    var instrument = mapInstrument.get(sonRecu);
     console.log(sonRecu + " FROM " + uuid);
-    switch(sonRecu){
-        case "ti-ta-ti" :
-            instrument = "piano";
-            break;
-        case "pouet" :
-            instrument = "trumpet";
-            break;
-        case "gzi-gzi" :
-            instrument = "violin";
-            break;
-        case "trulu" :
-            instrument = "flute";
-            break;
-        case "boum-boum" :
-            instrument = "drum";
-            break;
-    }
+
 
     mapMusicien.set(uuid, new Musicien(uuid, instrument, reception));
     console.log(msg.toString())
@@ -55,11 +45,15 @@ udp_server.on('listening', () => {
 
 function checkActivity(){
     for (var [cle, valeur] of mapMusicien){
-        var now =  moment().format('MMMM D YYYY, HH:mm:ss');
-        var reception = valeur.lastContact;
+        var now =  moment();
+        var reception = moment(valeur.lastContact);
+        var diff = moment.duration(now.diff(reception)).as("seconds");
 
-        if(now.sub(5, 'seconds') >= reception){
+
+        //console.log(diff)
+        if(diff > 5){
             mapMusicien.delete(cle);
+            //console.log("on a delete un truc poto")
         }
     }
 }
@@ -80,7 +74,10 @@ tcp_server = net.createServer(onClientConnected);
 tcp_server.listen(PORT_TCP, HOST);
 
 function onClientConnected(socket) {
-    // TODO ENVOYER LE DICO SERIALISÉ
-    socket.write("t'es connecté poto");
+    var tabMusician = [];
+    for (var [cle, valeur] of mapMusicien){
+        tabMusician.push(valeur);
+    }
+    socket.write(JSON.stringify(tabMusician));
     socket.destroy();
 }
